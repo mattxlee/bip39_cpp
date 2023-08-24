@@ -23,13 +23,13 @@ public:
     {
     }
 
-    WordList const& Load(std::string const& language)
+    WordList const& Load(std::string const& lang)
     {
-        auto it = word_list_.find(language);
+        auto it = word_list_.find(lang);
         if (it != std::cend(word_list_)) {
             return it->second;
         }
-        auto filepath = path_to_datafiles_ + "/" + (language + ".txt");
+        auto filepath = path_to_datafiles_ + "/" + (lang + ".txt");
         std::ifstream in(filepath);
         if (!in.is_open()) {
             throw std::runtime_error("cannot open data file");
@@ -43,8 +43,8 @@ public:
                 list[i++] = std::move(line);
             }
         }
-        word_list_.insert(std::make_pair(language, std::move(list)));
-        return word_list_[language];
+        word_list_.insert(std::make_pair(lang, std::move(list)));
+        return word_list_[lang];
     }
 
 private:
