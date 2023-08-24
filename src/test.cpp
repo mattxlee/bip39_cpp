@@ -41,16 +41,6 @@ TEST(WordList, Initial)
     }
 }
 
-TEST(Random, Random)
-{
-    bip39::RandomBytes bytes(128);
-    auto res = bytes.Random();
-    EXPECT_EQ(res.size(), 128);
-
-    auto res2 = bytes.Random();
-    EXPECT_NE(res, res2);
-}
-
 TEST(Bits, ShiftWithMultiplyElements)
 {
     std::vector<uint8_t> before { 0b11011101, 0b01100011 };

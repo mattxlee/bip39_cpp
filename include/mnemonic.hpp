@@ -10,7 +10,6 @@
 
 #include <iostream>
 
-#include "random.hpp"
 #include "words.hpp"
 #include "sha256.hpp"
 #include "bit_opts.hpp"
@@ -19,24 +18,7 @@ namespace bip39 {
 
 class Mnemonic {
 public:
-    static Mnemonic GenerateMnemonicByBits(int num_bits, WordListLoader& loader)
-    {
-        if (num_bits % 8 != 0) {
-            throw std::runtime_error("invalid number of bits");
-        }
-        RandomBytes rnd(num_bits / 8);
-        return Mnemonic(rnd.Random(), loader);
-    }
-
-    static Mnemonic GenerateMnemonicByNumWords(int num_words, WordListLoader& loader)
-    {
-        if (num_words % 3 != 0) {
-            throw std::runtime_error("invalid number of words");
-        }
-        return GenerateMnemonicByBits(num_words * 32 / 3, loader);
-    }
-
-    explicit Mnemonic(std::vector<uint8_t> entropy, WordListLoader& loader)
+    Mnemonic(std::vector<uint8_t> entropy, WordListLoader& loader)
         : entropy_(std::move(entropy))
         , num_bits_(entropy_.size() * 8)
         , word_list_loader_(loader)
