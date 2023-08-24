@@ -8,6 +8,8 @@ set(TEST_SRCS ./src/test.cpp)
 
 include(FetchContent)
 
+find_package(OpenSSL REQUIRED)
+
 FetchContent_Declare(
     googletest
     GIT_REPOSITORY https://github.com/google/googletest
@@ -23,4 +25,4 @@ target_include_directories(
     ${tinyformat_SOURCE_DIR}
     ${googletest_SOURCE_DIR}/googletest/include
 )
-target_link_libraries(bip39_test PRIVATE gtest gtest_main)
+target_link_libraries(bip39_test PRIVATE gtest gtest_main OpenSSL::SSL OpenSSL::Crypto)
