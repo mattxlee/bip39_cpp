@@ -80,6 +80,11 @@ public:
             }
             container_[i] <<= n;
         }
+        num_bits_ -= num_bits_to_shift;
+        int bytes_after_shift = num_bits_ / 8 + ((num_bits_ % 8 > 0) ? 1 : 0);
+        while (container_.size() > bytes_after_shift) {
+            container_.erase(std::begin(container_) + (container_.size() - 1));
+        }
     }
 
     Container const& GetData() const
