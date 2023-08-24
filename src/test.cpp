@@ -23,7 +23,7 @@ TEST(ToolBox, ParseHexString)
 TEST(ToolBox, ParseWordsString)
 {
     char const* sz_example = "hello world this is an example";
-    auto words = ParseWords(sz_example);
+    auto words = ParseWords(sz_example, " ");
     EXPECT_EQ(words.size(), 6);
     EXPECT_EQ(words[0], "hello");
     EXPECT_EQ(words[1], "world");
@@ -65,17 +65,20 @@ TEST(Bits, ShiftWithMultiplyElements)
 TEST(Mnemonic, EntropyToWords)
 {
     Json::Value root = ReadTestJsonFile("docs/tests.json");
-    Json::Value english_tests = root["english"];
-    if (!english_tests.isArray()) {
-        throw std::runtime_error("the tests object type is not an array");
-    }
-    bip39::WordListLoader loader("docs");
-    for (Json::Value const& test_obj : english_tests) {
-        std::string hash_str = test_obj[0].asString();
-        std::vector<uint8_t> hash = ParseHex(hash_str);
-        std::string words_str = test_obj[1].asString();
-        std::vector<std::string> words = ParseWords(words_str);
-        bip39::Mnemonic mnemonic(hash, loader);
-        EXPECT_EQ(mnemonic.GetWordList("english"), words);
+    auto lang_names = root.getMemberNames();
+    for (auto const& lang : lang_names) {
+        Json::Value tests = root[lang];
+        if (!tests.isArray()) {
+            throw std::runtime_error("the tests object type is not an array");
+        }
+        bip39::WordListLoader loader("docs");
+        for (Json::Value const& test_obj : tests) {
+            std::string hash_str = test_obj[0].asString();
+            std::vector<uint8_t> hash = ParseHex(hash_str);
+            std::string words_str = test_obj[1].asString();
+            std::vector<std::string> words = ParseWords(words_str, ((lang == "japanese") ? u8"\u3000" : u8"\u0020"));
+            bip39::Mnemonic mnemonic(hash, loader);
+            EXPECT_EQ(mnemonic.GetWordList(lang), words);
+        }
     }
 }

@@ -47,14 +47,14 @@ inline std::vector<uint8_t> ParseHex(std::string_view hex)
     return res;
 }
 
-inline std::vector<std::string> ParseWords(std::string_view words, char delimiter = ' ')
+inline std::vector<std::string> ParseWords(std::string_view words, std::string_view delimiter = u8"\u0020")
 {
     std::vector<std::string> res;
     int p{0};
     int f = words.find(delimiter);
     while (f != std::string_view::npos) {
         res.push_back(std::string(words.substr(p, f - p)));
-        p = f + 1;
+        p = f + delimiter.size();
         f = words.find(delimiter, p);
     }
     res.push_back(std::string(words.substr(p)));
