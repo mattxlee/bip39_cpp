@@ -57,7 +57,7 @@ TEST(Bits, ShiftWithMultiplyElements)
 TEST(Bits, ShiftFromEmpty)
 {
     bip39::Bits bits;
-    bits.ShiftToRightByAdding(3, 0b101);
+    bits.AddBits(3, 0b101);
     EXPECT_EQ(bits.GetData().size(), 1);
     EXPECT_EQ(bits.GetData()[0], 0b10100000);
 }
@@ -65,7 +65,7 @@ TEST(Bits, ShiftFromEmpty)
 TEST(Bits, ShiftFromEmpty16)
 {
     bip39::Bits bits;
-    bits.ShiftToRightByAdding(11, 2005);
+    bits.AddBits(11, 2005);
     EXPECT_EQ(bits.GetData().size(), 2);
     EXPECT_EQ(bits.GetData()[0], 0b11111010);
     EXPECT_EQ(bits.GetData()[1], 0b10100000);
@@ -86,8 +86,12 @@ TEST(Mnemonic, EntropyToWords)
             std::vector<uint8_t> hash = ParseHex(hash_str);
             std::string words_str = test_obj[1].asString();
             std::vector<std::string> words = ParseWords(words_str, ((lang == "japanese") ? u8"\u3000" : u8"\u0020"));
-            bip39::Mnemonic mnemonic(hash, loader);
-            EXPECT_EQ(mnemonic.GetWordList(lang), words);
+            // test: from bytes to words
+            bip39::Mnemonic mnemonic(hash, lang, loader);
+            EXPECT_EQ(mnemonic.GetWordList(), words);
+            // test: from words to bytes
+            bip39::Mnemonic mnemonic2(words, lang, loader);
+            EXPECT_EQ(mnemonic2.GetEntropyData(), hash);
         }
     }
 }

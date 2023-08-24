@@ -47,6 +47,16 @@ public:
         return res;
     }
 
+    template <typename T>
+    static T FirstNBits(int num_bits, T val)
+    {
+        T mask;
+        memset(&mask, 0xff, sizeof(mask));
+        int num_padding_bits = (sizeof(T) * 8 - num_bits);
+        mask <<= num_padding_bits;
+        return (val & mask) >> num_padding_bits;
+    }
+
     uint16_t FrontBitsToUInt16(int num_front_bits) const
     {
         if (num_front_bits > 16) {
@@ -92,30 +102,33 @@ public:
         }
     }
 
-    void ShiftToRightByAdding(int num_bits_to_shift, uint16_t data)
+    void AddBits(int num_bits, uint16_t val)
     {
-        if (num_bits_to_shift > sizeof(uint16_t) * 8) {
-            throw std::runtime_error("cannot shift bits more than 16");
+        int num_remaining_bits = num_bits;
+        val <<= 16 - num_remaining_bits;
+        int num_extra_bits = 8 * container_.size() - num_bits_;
+        if (num_extra_bits > 0) {
+            uint16_t extra_bits = FirstNBits(num_extra_bits, val);
+            container_[container_.size() - 1] += extra_bits;
+            val <<= num_extra_bits;
+            num_remaining_bits -= num_extra_bits;
         }
-        int bytes_to_be_inserted = num_bits_to_shift / 8;
-        int num_bits_to_shift_for_each_byte = num_bits_to_shift % 8;
-        int num_bits_remainings_from_container = container_.size() * 8 - num_bits_;
-        // ensure there are enough bytes
-        if (num_bits_to_shift_for_each_byte > num_bits_remainings_from_container) {
-            container_.push_back(0);
+        if (num_remaining_bits >= 8) {
+            uint8_t new_byte = FirstNBits(8, val);
+            container_.push_back(new_byte);
+            val <<= 8;
+            num_remaining_bits -= 8;
         }
-        uint8_t mask = 0xff >> (8 - num_bits_to_shift_for_each_byte);
-        uint8_t remaining_bits = (data & mask) << (8 - num_bits_to_shift_for_each_byte);
-        for (int i = 0; i < container_.size(); ++i) {
-            uint8_t this_remaining_bits = (container_[i] & mask) << (8 - num_bits_to_shift_for_each_byte);
-            container_[i] = (container_[i] >> num_bits_to_shift_for_each_byte) + remaining_bits;
-            remaining_bits = this_remaining_bits;
+        if (num_remaining_bits > 0) {
+            uint8_t new_byte = FirstNBits(num_remaining_bits, val) << (8 - num_remaining_bits);
+            container_.push_back(new_byte);
         }
-        if (num_bits_to_shift > 8) {
-            data >>= num_bits_to_shift_for_each_byte;
-            container_.push_front(data);
-        }
-        num_bits_ += num_bits_to_shift;
+        num_bits_ += num_bits;
+    }
+
+    int GetNumBits() const
+    {
+        return num_bits_;
     }
 
     Container const& GetData() const

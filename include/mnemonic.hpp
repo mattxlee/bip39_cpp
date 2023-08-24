@@ -18,24 +18,11 @@ namespace bip39 {
 
 class Mnemonic {
 public:
-    Mnemonic(std::vector<uint8_t> entropy, WordListLoader& loader)
+    Mnemonic(std::vector<uint8_t> entropy, std::string const& lang, WordListLoader& loader)
         : entropy_(std::move(entropy))
         , num_bits_(entropy_.size() * 8)
         , word_list_loader_(loader)
     {
-    }
-
-    Mnemonic(WordList word_list, std::string_view lang, WordListLoader& loader)
-        : word_list_loader_(loader)
-    {
-
-    }
-
-    WordList const& GetWordList(std::string const& lang) const
-    {
-        if (!word_list_.empty()) {
-            return word_list_;
-        }
         auto data = entropy_;
         SHA256 sha;
         sha.Update(data.data(), data.size());
@@ -53,7 +40,37 @@ public:
             word_list_.push_back(word_list[word_index]);
             bits.ShiftToLeft(11);
         }
+    }
+
+    Mnemonic(WordList const& word_list, std::string const& lang, WordListLoader& loader)
+        : word_list_loader_(loader)
+    {
+        if (word_list.size() % 3 != 0) {
+            throw std::runtime_error("invalid number of words to convert");
+        }
+        Bits bits;
+        auto words = loader.Load(lang);
+        for (auto const& word : word_list) {
+            auto it = std::find(std::cbegin(words), std::cend(words), word);
+            if (it != std::cend(words)) {
+                uint16_t index = std::distance(std::cbegin(words), it);
+                bits.AddBits(11, index);
+            }
+        }
+        int num_ent_bits = word_list.size() * 32 / 3;
+        int num_entropy_bytes = num_ent_bits / 8;
+        entropy_.resize(num_entropy_bytes);
+        std::copy(std::cbegin(bits.GetData()), std::cbegin(bits.GetData()) + num_entropy_bytes, std::begin(entropy_));
+    }
+
+    WordList const& GetWordList() const
+    {
         return word_list_;
+    }
+
+    std::vector<uint8_t> const& GetEntropyData() const
+    {
+        return entropy_;
     }
 
 private:
