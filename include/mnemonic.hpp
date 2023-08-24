@@ -25,6 +25,12 @@ public:
     {
     }
 
+    Mnemonic(WordList word_list, std::string_view lang, WordListLoader& loader)
+        : word_list_loader_(loader)
+    {
+
+    }
+
     WordList const& GetWordList(std::string const& lang) const
     {
         if (!word_list_.empty()) {

@@ -1,5 +1,7 @@
 #include <gtest/gtest.h>
 
+#include <vector>
+
 #include <string>
 #include <string_view>
 
@@ -50,6 +52,23 @@ TEST(Bits, ShiftWithMultiplyElements)
     uint8_t after[] = { 0b11101011, 0b00011000 };
     EXPECT_EQ(bits.GetData()[0], after[0]);
     EXPECT_EQ(bits.GetData()[1], after[1]);
+}
+
+TEST(Bits, ShiftFromEmpty)
+{
+    bip39::Bits bits;
+    bits.ShiftToRightByAdding(3, 0b101);
+    EXPECT_EQ(bits.GetData().size(), 1);
+    EXPECT_EQ(bits.GetData()[0], 0b10100000);
+}
+
+TEST(Bits, ShiftFromEmpty16)
+{
+    bip39::Bits bits;
+    bits.ShiftToRightByAdding(11, 2005);
+    EXPECT_EQ(bits.GetData().size(), 2);
+    EXPECT_EQ(bits.GetData()[0], 0b11111010);
+    EXPECT_EQ(bits.GetData()[1], 0b10100000);
 }
 
 TEST(Mnemonic, EntropyToWords)
