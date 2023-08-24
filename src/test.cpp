@@ -10,7 +10,6 @@
 #include "toolbox.hpp"
 
 #include "mnemonic.hpp"
-#include "words.hpp"
 
 TEST(ToolBox, ParseHexString)
 {
@@ -33,14 +32,6 @@ TEST(ToolBox, ParseWordsString)
     EXPECT_EQ(words[3], "is");
     EXPECT_EQ(words[4], "an");
     EXPECT_EQ(words[5], "example");
-}
-
-TEST(WordList, Initial)
-{
-    bip39::WordListLoader word_list("docs");
-    for (auto const& lang : bip39::LANGUAGES) {
-        EXPECT_EQ(word_list.Load(lang).size(), 2048);
-    }
 }
 
 TEST(Bits, ShiftWithMultiplyElements)
@@ -77,14 +68,10 @@ TEST(Mnemonic, EntropyToWords)
     Json::Value root = ReadTestJsonFile("docs/tests.json");
     auto lang_names = root.getMemberNames();
     for (auto const& lang : lang_names) {
-        if (lang == "japanese") {
-            continue;
-        }
         Json::Value tests = root[lang];
         if (!tests.isArray()) {
             throw std::runtime_error("the tests object type is not an array");
         }
-        bip39::WordListLoader loader("docs");
         for (Json::Value const& test_obj : tests) {
             std::string hash_str = test_obj[0].asString();
             std::vector<uint8_t> hash = ParseHex(hash_str);
@@ -93,7 +80,7 @@ TEST(Mnemonic, EntropyToWords)
             std::string seed_str = test_obj[2].asString();
             std::vector<uint8_t> seed = ParseHex(seed_str);
             // test: from bytes to words
-            bip39::Mnemonic mnemonic(hash, lang, loader);
+            bip39::Mnemonic mnemonic(hash, lang);
             EXPECT_EQ(mnemonic.GetWordList(), words);
             auto created_seed = mnemonic.CreateSeed(SZ_PASSPHRASE);
             EXPECT_EQ(created_seed, seed);
@@ -105,7 +92,7 @@ TEST(Mnemonic, EntropyToWords)
                 return;
             }
             // test: from words to bytes
-            bip39::Mnemonic mnemonic2(words, lang, loader);
+            bip39::Mnemonic mnemonic2(words, lang);
             EXPECT_EQ(mnemonic2.GetEntropyData(), hash);
         }
     }
