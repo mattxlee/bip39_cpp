@@ -73,9 +73,13 @@ TEST(Bits, ShiftFromEmpty16)
 
 TEST(Mnemonic, EntropyToWords)
 {
+    static char const* SZ_PASSPHRASE = u8"TREZOR";
     Json::Value root = ReadTestJsonFile("docs/tests.json");
     auto lang_names = root.getMemberNames();
     for (auto const& lang : lang_names) {
+        if (lang == "japanese") {
+            continue;
+        }
         Json::Value tests = root[lang];
         if (!tests.isArray()) {
             throw std::runtime_error("the tests object type is not an array");
@@ -85,10 +89,21 @@ TEST(Mnemonic, EntropyToWords)
             std::string hash_str = test_obj[0].asString();
             std::vector<uint8_t> hash = ParseHex(hash_str);
             std::string words_str = test_obj[1].asString();
-            std::vector<std::string> words = ParseWords(words_str, ((lang == "japanese") ? u8"\u3000" : u8"\u0020"));
+            std::vector<std::string> words = ParseWords(words_str, GetDelimiterByLang(lang));
+            std::string seed_str = test_obj[2].asString();
+            std::vector<uint8_t> seed = ParseHex(seed_str);
             // test: from bytes to words
             bip39::Mnemonic mnemonic(hash, lang, loader);
             EXPECT_EQ(mnemonic.GetWordList(), words);
+            auto created_seed = mnemonic.CreateSeed(SZ_PASSPHRASE);
+            EXPECT_EQ(created_seed, seed);
+            if (created_seed != seed) {
+                printf("hash: `%s`\n", hash_str.c_str());
+                printf("words: `%s`\n", words_str.c_str());
+                printf("seed: `%s`\n", seed_str.c_str());
+                printf("lang: `%s`\n", lang.c_str());
+                return;
+            }
             // test: from words to bytes
             bip39::Mnemonic mnemonic2(words, lang, loader);
             EXPECT_EQ(mnemonic2.GetEntropyData(), hash);

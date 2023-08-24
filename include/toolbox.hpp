@@ -61,6 +61,26 @@ inline std::vector<std::string> ParseWords(std::string_view words, std::string_v
     return res;
 }
 
+inline std::string GenerateWords(std::vector<std::string> const& word_list, std::string_view delimiter = u8"\u0020")
+{
+    std::stringstream ss;
+    bool first{true};
+    for (auto const& word : word_list) {
+        if (first) {
+            ss << word;
+            first = false;
+        } else {
+            ss << delimiter << word;
+        }
+    }
+    return ss.str();
+}
+
+std::string GetDelimiterByLang(std::string_view lang)
+{
+    return (lang == "japanese") ? u8"\u3000" : u8"\u0020";
+}
+
 inline Json::Value ReadTestJsonFile(std::string_view filepath)
 {
     std::ifstream in(filepath);

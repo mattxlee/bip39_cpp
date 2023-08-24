@@ -24,6 +24,9 @@ public:
 
     WordList const& Load(std::string const& lang)
     {
+        if (lang.empty()) {
+            throw std::runtime_error("invalid name of lang");
+        }
         auto it = word_list_.find(lang);
         if (it != std::cend(word_list_)) {
             return it->second;
@@ -31,6 +34,7 @@ public:
         auto filepath = path_to_datafiles_ + "/" + (lang + ".txt");
         std::ifstream in(filepath);
         if (!in.is_open()) {
+            printf("file cannot be opened: %s\n", filepath.c_str());
             throw std::runtime_error("cannot open data file");
         }
         int i{0};
