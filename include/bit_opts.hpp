@@ -4,89 +4,103 @@
 #include <cstdint>
 
 #include <vector>
+#include <bitset>
 
 namespace bip39 {
 
-template <typename T>
 class Bits {
 public:
-    static constexpr int BITS_T = sizeof(T) * 8;
+    using ElementType = uint8_t;
+    using IntType = uint64_t;
+    using Container = std::vector<ElementType>;
 
-    explicit Bits(T val, int num_bits = BITS_T)
-        : num_bits_(num_bits)
+    static constexpr int NumElementBits = sizeof(ElementType) * 8;
+    static constexpr int NumIntBits = sizeof(IntType) * 8;
+
+    Bits(Container container, uint32_t num_bits)
+        : container_(std::move(container))
+        , num_bits_(num_bits)
     {
-        data_.push_back(val);
     }
 
-    Bits(void const* data, uint32_t num_bits)
-        : num_bits_(num_bits)
+    static ElementType MakeMask(uint8_t num_bits)
     {
-        if (data == nullptr || num_bits == 0) {
-            throw std::runtime_error("invalid incoming data");
-        }
-        int n = num_bits / BITS_T;
-        if (num_bits % BITS_T != 0) {
-            ++n;
-        }
-        data_.resize(n, 0);
-        memcpy(data_.data(), data, n);
+        ElementType mask = 0xff;
+        mask <<= (8 - num_bits);
+        return mask;
     }
 
-    T FrontBitsToInt(int num_front_bits) const
+    static uint16_t MakeInt16FromTwoBytes(uint8_t b1, uint8_t b2, int total_bits)
     {
-        if (num_front_bits > BITS_T) {
-            throw std::runtime_error("too many bits to convert to 64-bit int value");
+        if (total_bits > 16) {
+            throw std::runtime_error("out of number of bits range");
         }
-        if (num_front_bits > num_bits_) {
-            num_front_bits = num_bits_;
+        int num_shift_bits = total_bits % 8;
+        uint16_t res{b1};
+        res <<= num_shift_bits;
+        res += b2;
+        return res;
+    }
+
+    uint16_t FrontBitsToUInt16(int num_front_bits) const
+    {
+        if (num_front_bits > 16) {
+            throw std::runtime_error("number of bits out of integer range");
         }
-        T first = data_[0];
-        int num_shift = BITS_T - num_front_bits;
-        return (first & BuildMask(num_front_bits)) >> num_shift;
+        if (num_front_bits > container_.size() * 8) {
+            throw std::runtime_error("reach the limits of current data");
+        }
+        int num_bytes = num_front_bits / NumElementBits;
+        Container bytes(num_bytes);
+        memcpy(bytes.data(), container_.data(), num_bytes);
+        int extra_bits = num_front_bits % NumElementBits;
+        if (extra_bits > 0) {
+            // also retrieve the final byte
+            ElementType final_byte = container_[num_bytes];
+            final_byte &= MakeMask(extra_bits);
+            final_byte >>= (8 - extra_bits);
+            bytes.push_back(final_byte);
+        }
+        return MakeInt16FromTwoBytes(bytes[0], bytes[1], num_front_bits);
     }
 
     void ShiftToLeft(int num_bits_to_shift)
     {
-        int rm_n = (num_bits_to_shift / BITS_T);
+        int rm_n = (num_bits_to_shift / NumElementBits);
         if (rm_n > 0) {
-            data_.erase(std::begin(data_), std::begin(data_) + rm_n);
+            container_.erase(std::begin(container_), std::begin(container_) + rm_n);
         }
-        int n = num_bits_to_shift % BITS_T;
-        int nn = BITS_T - n;
-        T mask = BuildMask(n);
-        for (int i = 0; i < data_.size(); ++i) {
+        int n = num_bits_to_shift % NumElementBits;
+        int nn = NumElementBits - n;
+        ElementType mask = MakeMask(n);
+        for (int i = 0; i < container_.size(); ++i) {
             if (i > 0) {
-                T remaining_bits = (data_[i] & mask) >> nn;
-                data_[i - 1] += remaining_bits;
+                ElementType remaining_bits = (container_[i] & mask) >> nn;
+                container_[i - 1] += remaining_bits;
             }
-            data_[i] <<= n;
+            container_[i] <<= n;
         }
     }
 
-    std::vector<T> const& GetData() const
+    Container const& GetData() const
     {
-        return data_;
+        return container_;
     }
 
 private:
-    static T SetAllBits()
-    {
-        T val;
-        memset(&val, 0xff, sizeof(val));
-        return val;
-    }
-
-    static uint64_t BuildMask(int num_bits)
-    {
-        assert(num_bits <= BITS_T);
-        T res = SetAllBits();
-        res <<= (BITS_T - num_bits);
-        return res;
-    }
-
-    std::vector<T> data_;
+    Container container_;
     int num_bits_;
 };
+
+template <typename StreamType>
+StreamType& operator<<(StreamType& s, Bits const& bits)
+{
+    for (uint8_t ch : bits.GetData()) {
+        std::bitset<8> byte(ch);
+        s << byte << " ";
+    }
+    return s;
+}
 
 } // namespace bip39
 

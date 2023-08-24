@@ -1,7 +1,7 @@
 #ifndef WORDS_HPP
 #define WORDS_HPP
 
-#include <array>
+#include <vector>
 #include <map>
 
 #include <string>
@@ -13,8 +13,7 @@
 
 namespace bip39 {
 
-int const NUM_WORDS = 2048;
-using WordList = std::array<std::string, NUM_WORDS>;
+using WordList = std::vector<std::string>;
 
 class WordListLoader {
 public:
@@ -40,7 +39,7 @@ public:
             std::string line;
             std::getline(in, line);
             if (!line.empty()) {
-                list[i++] = std::move(line);
+                list.push_back(std::move(line));
             }
         }
         word_list_.insert(std::make_pair(lang, std::move(list)));
