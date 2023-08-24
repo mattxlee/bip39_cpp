@@ -11,7 +11,7 @@ namespace bip39 {
 
 using WordList = std::vector<std::string>;
 
-std::array<std::string, 2048> english_words {
+static std::array<std::string, 2048> english_words {
     "abandon",
     "ability",
     "able",
@@ -2062,7 +2062,7 @@ std::array<std::string, 2048> english_words {
     "zoo",
 };
 
-std::array<std::string, 2048> chinese_simplified_words = {
+inline std::array<std::string, 2048> chinese_simplified_words = {
     "的",
     "一",
     "是",
@@ -4113,7 +4113,7 @@ std::array<std::string, 2048> chinese_simplified_words = {
     "歇",
 };
 
-std::array<std::string, 2048> chinese_traditional_words = {
+inline std::array<std::string, 2048> chinese_traditional_words = {
     "的",
     "一",
     "是",
@@ -6164,7 +6164,7 @@ std::array<std::string, 2048> chinese_traditional_words = {
     "歇",
 };
 
-std::array<std::string, 2048> czech_words = {
+inline std::array<std::string, 2048> czech_words = {
     "abdikace",
     "abeceda",
     "adresa",
@@ -8215,7 +8215,7 @@ std::array<std::string, 2048> czech_words = {
     "zvyk",
 };
 
-std::array<std::string, 2048> french_words = {
+inline std::array<std::string, 2048> french_words = {
     "abaisser",
     "abandon",
     "abdiquer",
@@ -10266,7 +10266,7 @@ std::array<std::string, 2048> french_words = {
     "zoologie",
 };
 
-std::array<std::string, 2048> italian_words = {
+inline std::array<std::string, 2048> italian_words = {
     "abaco",
     "abbaglio",
     "abbinato",
@@ -12317,7 +12317,7 @@ std::array<std::string, 2048> italian_words = {
     "zuppa",
 };
 
-std::array<std::string, 2048> korean_words = {
+inline std::array<std::string, 2048> korean_words = {
     "가격",
     "가끔",
     "가난",

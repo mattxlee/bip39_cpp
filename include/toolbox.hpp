@@ -10,9 +10,6 @@
 
 #include <fstream>
 
-#include <json/value.h>
-#include <json/reader.h>
-
 inline uint8_t CharToInt(char ch)
 {
     if (ch >= '0' && ch <= '9') {
@@ -76,35 +73,9 @@ inline std::string GenerateWords(std::vector<std::string> const& word_list, std:
     return ss.str();
 }
 
-std::string GetDelimiterByLang(std::string_view lang)
+inline std::string GetDelimiterByLang(std::string_view lang)
 {
     return (lang == "japanese") ? u8"\u3000" : u8"\u0020";
-}
-
-inline Json::Value ReadTestJsonFile(std::string_view filepath)
-{
-    std::ifstream in(filepath);
-    if (!in.is_open()) {
-        throw std::runtime_error("cannot open test json to read");
-    }
-    in.seekg(0, std::ios::end);
-    auto len = in.tellg();
-    std::shared_ptr<char> pcontent(new char[len], [](char* p) { delete[] p; });
-    in.seekg(0);
-    in.read(pcontent.get(), len);
-    Json::CharReaderBuilder builder;
-    std::unique_ptr<Json::CharReader> reader(builder.newCharReader());
-    std::string json_str = pcontent.get();
-    Json::Value root;
-    std::string errs;
-    if (!reader->parse(json_str.c_str(), json_str.c_str() + json_str.size(), &root, &errs)) {
-        // throw errors
-        throw std::runtime_error("cannot parse json string");
-    }
-    if (!root.isObject()) {
-        throw std::runtime_error("wrong type of the json root");
-    }
-    return root;
 }
 
 #endif

@@ -13,6 +13,7 @@
 #include <utf8proc.h>
 
 #include "lang_consts.h"
+#include "toolbox.hpp"
 
 #include "sha256.hpp"
 #include "bit_opts.hpp"

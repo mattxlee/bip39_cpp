@@ -3,7 +3,7 @@
 
 #include <cstdint>
 
-#include <deque>
+#include <vector>
 #include <bitset>
 
 namespace bip39 {
@@ -12,7 +12,7 @@ class Bits {
 public:
     using ElementType = uint8_t;
     using IntType = uint64_t;
-    using Container = std::deque<ElementType>;
+    using Container = std::vector<ElementType>;
 
     static constexpr int NumElementBits = sizeof(ElementType) * 8;
     static constexpr int NumIntBits = sizeof(IntType) * 8;

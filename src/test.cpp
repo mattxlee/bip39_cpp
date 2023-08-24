@@ -6,9 +6,9 @@
 #include <string>
 #include <string_view>
 
-#include "basic_defs.h"
-
 #include "toolbox.hpp"
+
+#include "bit_opts.hpp"
 
 #include "mnemonic.hpp"
 
