@@ -1539,8 +1539,6 @@ inline void InitLangTests(LangTests& tests)
 TEST(Mnemonic, EntropyToWords)
 {
     static char const* SZ_PASSPHRASE = u8"TREZOR";
-    // Json::Value root = ReadTestJsonFile("docs/tests.json");
-    // auto lang_names = root.getMemberNames();
     LangTests tests;
     InitLangTests(tests);
     for (auto const& lang_test : tests) {
