@@ -6,7 +6,7 @@ Another BIP39 implementation written in C++
 
 ## Dependencies
 
-These libraries must be found from your local system. We highly recommend to use `vcpkg` to manage these two C++ libraries.
+These libraries will be downloaded during the compiling procedure automatically.
 
 * OpenSSL
 
@@ -61,5 +61,3 @@ std::vector<uint8_t> const& GetEntropyData() const
 ## Test
 
 All the test cases are downloaded from [https://github.com/trezor/python-mnemonic/blob/master/vectors.json](https://github.com/trezor/python-mnemonic/blob/master/vectors.json) and it has been converted into C++ source file `src/test.cpp`
-
-All test cases should be passed, you can use cmake to initialize the make file from your computer and ensure that the dependencies are installed on your local system. You also can use [vcpkg](https://github.com/microsoft/vcpkg) to manage the dependencies, which is the way we highly recommend.
