@@ -48,3 +48,6 @@ target_include_directories(
     ${googletest_SOURCE_DIR}/googletest/include
 )
 target_link_libraries(bip39_test PRIVATE gtest gtest_main utf8proc ${OpenSSL_CRYPTO_LIB} ${OpenSSL_SSL_LIB})
+
+enable_testing()
+add_test(NAME BIP39Test COMMAND ${CMAKE_BINARY_DIR}/bip39_test)
