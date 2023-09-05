@@ -9,6 +9,7 @@
 #include <string_view>
 
 #include <fstream>
+#include <sstream>
 
 inline uint8_t CharToInt(char ch)
 {

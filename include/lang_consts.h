@@ -11,6 +11,12 @@ namespace bip39 {
 
 using WordList = std::vector<std::string>;
 
+std::string const LANGUAGES[] = {"chinese_simplified", "chinese_traditional", "czech", "english", "french", "italian", "japanese", "korean", "portuguese", "spanish"};
+
+// the number of bits of check-sum
+int const CS_MIN = 4;
+int const CS_MAX = 8;
+
 static std::array<std::string, 2048> english_words {
     "abandon",
     "ability",
