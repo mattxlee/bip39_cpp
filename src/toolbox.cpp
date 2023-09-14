@@ -1,17 +1,11 @@
-#ifndef TOOLBOX_HPP
-#define TOOLBOX_HPP
-
-#include <cstdint>
-
-#include <stdexcept>
-
-#include <string>
-#include <string_view>
+#include "toolbox.h"
 
 #include <fstream>
 #include <sstream>
 
-inline uint8_t CharToInt(char ch)
+namespace bip39 {
+
+uint8_t CharToInt(char ch)
 {
     if (ch >= '0' && ch <= '9') {
         return ch - '0';
@@ -21,7 +15,7 @@ inline uint8_t CharToInt(char ch)
     throw std::runtime_error("invalid hex char");
 }
 
-inline std::vector<uint8_t> ParseHex(std::string_view hex)
+std::vector<uint8_t> ParseHex(std::string_view hex)
 {
     if (hex.size() % 2 != 0) {
         throw std::runtime_error("invalid length of the incoming hex string");
@@ -45,7 +39,7 @@ inline std::vector<uint8_t> ParseHex(std::string_view hex)
     return res;
 }
 
-inline std::vector<std::string> ParseWords(std::string_view words, std::string_view delimiter = u8"\u0020")
+std::vector<std::string> ParseWords(std::string_view words, std::string_view delimiter)
 {
     std::vector<std::string> res;
     int p{0};
@@ -59,7 +53,7 @@ inline std::vector<std::string> ParseWords(std::string_view words, std::string_v
     return res;
 }
 
-inline std::string GenerateWords(std::vector<std::string> const& word_list, std::string_view delimiter = u8"\u0020")
+std::string GenerateWords(std::vector<std::string> const& word_list, std::string_view delimiter)
 {
     std::stringstream ss;
     bool first{true};
@@ -74,9 +68,9 @@ inline std::string GenerateWords(std::vector<std::string> const& word_list, std:
     return ss.str();
 }
 
-inline std::string GetDelimiterByLang(std::string_view lang)
+std::string GetDelimiterByLang(std::string_view lang)
 {
     return (lang == "japanese") ? u8"\u3000" : u8"\u0020";
 }
 
-#endif
+} // namespace bip39

@@ -1,7 +1,4 @@
-#ifndef BYTESWAP_HPP
-#define BYTESWAP_HPP
-
-#include <cstdint>
+#include "byteswap.h"
 
 namespace bip39 {
 
@@ -37,5 +34,3 @@ inline uint64_t ByteSwap(uint64_t val)
 }
 
 } // namespace bip39
-
-#endif

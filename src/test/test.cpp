@@ -6,16 +6,16 @@
 #include <string>
 #include <string_view>
 
-#include "toolbox.hpp"
+#include "toolbox.h"
 
-#include "bit_opts.hpp"
+#include "bit_opts.h"
 
-#include "mnemonic.hpp"
+#include "mnemonic.h"
 
 TEST(ToolBox, ParseHexString)
 {
     char const* sz_example = "abffdd0e110098000102";
-    auto res = ParseHex(sz_example);
+    auto res = bip39::ParseHex(sz_example);
     EXPECT_EQ(res.size(), 10);
     EXPECT_EQ(res[0], 0xab);
     EXPECT_EQ(res[1], 0xff);
@@ -25,7 +25,7 @@ TEST(ToolBox, ParseHexString)
 TEST(ToolBox, ParseWordsString)
 {
     char const* sz_example = "hello world this is an example";
-    auto words = ParseWords(sz_example, " ");
+    auto words = bip39::ParseWords(sz_example, " ");
     EXPECT_EQ(words.size(), 6);
     EXPECT_EQ(words[0], "hello");
     EXPECT_EQ(words[1], "world");
@@ -1545,11 +1545,11 @@ TEST(Mnemonic, EntropyToWords)
         auto lang = lang_test.first;
         for (auto const& test : lang_test.second) {
             std::string hash_str = test.entropy;
-            std::vector<uint8_t> hash = ParseHex(hash_str);
+            std::vector<uint8_t> hash = bip39::ParseHex(hash_str);
             std::string words_str = test.words;
-            std::vector<std::string> words = ParseWords(words_str, GetDelimiterByLang(lang));
+            std::vector<std::string> words = bip39::ParseWords(words_str, bip39::GetDelimiterByLang(lang));
             std::string seed_str = test.seed;
-            std::vector<uint8_t> seed = ParseHex(seed_str);
+            std::vector<uint8_t> seed = bip39::ParseHex(seed_str);
             // test: from bytes to words
             bip39::Mnemonic mnemonic(hash, lang);
             EXPECT_EQ(mnemonic.GetWordList(), words);

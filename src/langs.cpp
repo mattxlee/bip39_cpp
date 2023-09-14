@@ -1,23 +1,8 @@
-#ifndef LANG_CONSTS_HPP
-#define LANG_CONSTS_HPP
-
-#include <string>
-
-#include <array>
-#include <vector>
-#include <map>
+#include "langs.h"
 
 namespace bip39 {
 
-using WordList = std::vector<std::string>;
-
-std::string const LANGUAGES[] = {"chinese_simplified", "chinese_traditional", "czech", "english", "french", "italian", "japanese", "korean", "portuguese", "spanish"};
-
-// the number of bits of check-sum
-int const CS_MIN = 4;
-int const CS_MAX = 8;
-
-static std::array<std::string, 2048> english_words {
+std::array<std::string, 2048> english_words {
     "abandon",
     "ability",
     "able",
@@ -2068,7 +2053,7 @@ static std::array<std::string, 2048> english_words {
     "zoo",
 };
 
-inline std::array<std::string, 2048> chinese_simplified_words = {
+std::array<std::string, 2048> chinese_simplified_words = {
     "的",
     "一",
     "是",
@@ -4119,7 +4104,7 @@ inline std::array<std::string, 2048> chinese_simplified_words = {
     "歇",
 };
 
-inline std::array<std::string, 2048> chinese_traditional_words = {
+std::array<std::string, 2048> chinese_traditional_words = {
     "的",
     "一",
     "是",
@@ -6170,7 +6155,7 @@ inline std::array<std::string, 2048> chinese_traditional_words = {
     "歇",
 };
 
-inline std::array<std::string, 2048> czech_words = {
+std::array<std::string, 2048> czech_words = {
     "abdikace",
     "abeceda",
     "adresa",
@@ -8221,7 +8206,7 @@ inline std::array<std::string, 2048> czech_words = {
     "zvyk",
 };
 
-inline std::array<std::string, 2048> french_words = {
+std::array<std::string, 2048> french_words = {
     "abaisser",
     "abandon",
     "abdiquer",
@@ -10272,7 +10257,7 @@ inline std::array<std::string, 2048> french_words = {
     "zoologie",
 };
 
-inline std::array<std::string, 2048> italian_words = {
+std::array<std::string, 2048> italian_words = {
     "abaco",
     "abbaglio",
     "abbinato",
@@ -12323,7 +12308,7 @@ inline std::array<std::string, 2048> italian_words = {
     "zuppa",
 };
 
-inline std::array<std::string, 2048> korean_words = {
+std::array<std::string, 2048> korean_words = {
     "가격",
     "가끔",
     "가난",
@@ -20542,12 +20527,12 @@ std::map<std::string, std::array<std::string, 2048>> langs = {
 
 namespace utils {
 
-inline bool LangExists(std::string_view lang)
+bool LangExists(std::string_view lang)
 {
     return langs.find(std::string(lang)) != std::cend(langs);
 }
 
-inline std::vector<std::string> GetLangList()
+std::vector<std::string> GetLangList()
 {
     std::vector<std::string> res;
     for (auto const& lang : langs) {
@@ -20556,7 +20541,7 @@ inline std::vector<std::string> GetLangList()
     return res;
 }
 
-inline int GetLangIndex(std::string_view lang, std::string_view word)
+int GetLangIndex(std::string_view lang, std::string_view word)
 {
     auto const& store = langs[std::string(lang)];
     for (int i = 0; i < 2048; ++i) {
@@ -20567,7 +20552,7 @@ inline int GetLangIndex(std::string_view lang, std::string_view word)
     return -1;
 }
 
-inline std::string GetLangWord(std::string_view lang, int index)
+std::string GetLangWord(std::string_view lang, int index)
 {
     assert(index >= 0 && index <= 2047);
     auto const& store = langs[std::string(lang)];
@@ -20577,5 +20562,3 @@ inline std::string GetLangWord(std::string_view lang, int index)
 } // namespace utils
 
 } // namespace bip39
-
-#endif

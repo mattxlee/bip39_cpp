@@ -4,8 +4,6 @@ project(bip39_cpp VERSION 0.5 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 
-set(TEST_SRCS ./src/test.cpp)
-
 include(FetchContent)
 
 FetchContent_Declare(
@@ -38,16 +36,36 @@ set(OpenSSL_INCLUDE_DIR "${SOURCE_DIR}/include")
 set(OpenSSL_CRYPTO_LIB "${SOURCE_DIR}/libcrypto.a")
 set(OpenSSL_SSL_LIB "${SOURCE_DIR}/libssl.a")
 
+# bip39 library
+set(BIP39_CPP_SRC
+    ./src/bit_opts.cpp
+    ./src/byteswap.cpp
+    ./src/mnemonic.cpp
+    ./src/random.cpp
+    ./src/sha256.cpp
+    ./src/toolbox.cpp
+    ./src/langs.cpp
+)
+add_library(bip39_cpp ${BIP39_CPP_SRC})
+target_include_directories(bip39_cpp PRIVATE
+    ${CMAKE_SOURCE_DIR}/include
+    ${utf8proc_SOURCE_DIR}
+    ${OpenSSL_INCLUDE_DIR}
+    ${tinyformat_SOURCE_DIR}
+)
+
+# bip39 test
+set(TEST_SRCS
+    ./src/test/test.cpp
+)
 add_executable(bip39_test ${TEST_SRCS})
 add_dependencies(bip39_test openssl)
 target_include_directories(
     bip39_test PRIVATE
-    ./include
-    ${OpenSSL_INCLUDE_DIR}
-    ${tinyformat_SOURCE_DIR}
+    ${CMAKE_SOURCE_DIR}/include
     ${googletest_SOURCE_DIR}/googletest/include
 )
-target_link_libraries(bip39_test PRIVATE gtest gtest_main utf8proc ${OpenSSL_CRYPTO_LIB} ${OpenSSL_SSL_LIB})
+target_link_libraries(bip39_test PRIVATE bip39_cpp gtest gtest_main utf8proc ${OpenSSL_CRYPTO_LIB} ${OpenSSL_SSL_LIB})
 
 enable_testing()
 add_test(NAME BIP39Test COMMAND ${CMAKE_BINARY_DIR}/bip39_test)
