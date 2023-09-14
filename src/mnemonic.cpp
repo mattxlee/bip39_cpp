@@ -38,7 +38,7 @@ Mnemonic::Mnemonic(std::vector<uint8_t> entropy, std::string lang)
 Mnemonic::Mnemonic(WordList const& word_list, std::string lang)
     : lang_(std::move(lang))
 {
-    if (word_list.size() % 3 != 0) {
+    if (word_list.size() % 3 != 0 || word_list.size() < 12 || word_list.size() > 24) {
         throw std::runtime_error("invalid number of words to convert");
     }
     Bits bits;
