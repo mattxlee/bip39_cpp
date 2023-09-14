@@ -10,8 +10,6 @@
 
 #include <iostream>
 
-#include <utf8proc.h>
-
 #include "langs.h"
 #include "toolbox.h"
 

@@ -1,5 +1,7 @@
 #include "mnemonic.h"
 
+#include <utf8proc.h>
+
 #include <openssl/evp.h>
 
 namespace bip39 {
