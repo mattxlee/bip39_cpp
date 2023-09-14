@@ -2,11 +2,39 @@
 
 #include <cassert>
 
+#include <iostream>
+
 #include <utf8proc.h>
 
 #include <openssl/evp.h>
 
+#include "langs.h"
+#include "toolbox.h"
+
+#include "sha256.h"
+#include "bit_opts.h"
+
 namespace bip39 {
+
+bool Mnemonic::IsValidNumMnemonicSentences(int n)
+{
+    return !(n % 3 != 0 || n < 12 || n > 24);
+}
+
+int Mnemonic::GetEntBitsByNumMnemonicSentences(int n)
+{
+    assert(IsValidNumMnemonicSentences(n));
+    return n * 32 / 3;
+}
+
+std::vector<std::string> Mnemonic::GetLangList()
+{
+    std::vector<std::string> res(sizeof(LANGUAGES));
+    for (int i = 0; i < sizeof(LANGUAGES); ++i) {
+        res.push_back(LANGUAGES[i]);
+    }
+    return res;
+}
 
 Mnemonic::Mnemonic(std::vector<uint8_t> entropy, std::string lang)
     : entropy_(std::move(entropy))

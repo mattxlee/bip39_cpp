@@ -8,18 +8,18 @@
 #include <string>
 #include <string_view>
 
-#include <iostream>
-
-#include "langs.h"
-#include "toolbox.h"
-
-#include "sha256.h"
-#include "bit_opts.h"
-
 namespace bip39 {
+
+using WordList = std::vector<std::string>;
 
 class Mnemonic {
 public:
+    static bool IsValidNumMnemonicSentences(int n);
+
+    static int GetEntBitsByNumMnemonicSentences(int n);
+
+    static std::vector<std::string> GetLangList();
+
     Mnemonic(std::vector<uint8_t> entropy, std::string lang);
 
     Mnemonic(WordList const& word_list, std::string lang);
