@@ -87,3 +87,8 @@ if (BUILD_TEST)
     add_test(NAME BIP39Test COMMAND ${CMAKE_BINARY_DIR}/bip39_test)
 endif()
 
+# bip39 tool-box
+if (BUILD_MNTOOL)
+    set(MNEMONICTOOL_SRC ./src/mnemonic-toolbox/main.cpp)
+    add_executable(mntool ${MNEMONICTOOL_SRC})
+endif()
