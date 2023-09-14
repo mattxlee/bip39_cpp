@@ -2,6 +2,7 @@
 #define BIT_OPTS_HPP
 
 #include <cstdint>
+#include <cstring>
 
 #include <vector>
 #include <bitset>

@@ -1,5 +1,7 @@
 #include "bit_opts.h"
 
+#include <stdexcept>
+
 namespace bip39 {
 
 Bits::Bits()
