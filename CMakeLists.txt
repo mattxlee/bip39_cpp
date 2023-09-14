@@ -63,6 +63,9 @@ set(BIP39_CPP_SRC
     ./src/langs.cpp
 )
 add_library(bip39_cpp ${BIP39_CPP_SRC})
+if (BUILD_OPENSSL)
+    add_dependencies(bip39_cpp openssl)
+endif()
 target_include_directories(bip39_cpp PRIVATE
     ${CMAKE_SOURCE_DIR}/include
     ${utf8proc_SOURCE_DIR}
