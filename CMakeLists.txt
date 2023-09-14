@@ -16,19 +16,25 @@ FetchContent_Declare(
     GIT_TAG v2.8.0
 )
 
+if (BUILD_MNTOOL)
+    FetchContent_Declare(
+        cxxopts
+        GIT_REPOSITORY https://github.com/jarro2783/cxxopts
+        GIT_TAG v3.1.1
+    )
+    FetchContent_MakeAvailable(cxxopts)
+endif()
+
 if (BUILD_TEST)
     FetchContent_Declare(
         googletest
         GIT_REPOSITORY https://github.com/google/googletest
         GIT_TAG v1.14.0
     )
+    FetchContent_MakeAvailable(googletest)
 endif()
 
-if (BUILD_TEST)
-    FetchContent_MakeAvailable(googletest utf8proc)
-else()
-    FetchContent_MakeAvailable(utf8proc)
-endif()
+FetchContent_MakeAvailable(utf8proc)
 
 if (BUILD_OPENSSL)
     include(ExternalProject)
@@ -94,4 +100,5 @@ endif()
 if (BUILD_MNTOOL)
     set(MNEMONICTOOL_SRC ./src/mnemonic-toolbox/main.cpp)
     add_executable(mntool ${MNEMONICTOOL_SRC})
+    target_include_directories(mntool PRIVATE ${cxxopts_SOURCE_DIR}/include)
 endif()
