@@ -1,5 +1,7 @@
 #include "mnemonic.h"
 
+#include <cassert>
+
 #include <utf8proc.h>
 
 #include <openssl/evp.h>

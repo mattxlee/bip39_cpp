@@ -1,5 +1,8 @@
 #include "sha256.h"
 
+#include <cassert>
+#include <cstring>
+
 #include <stdexcept>
 
 #include <openssl/evp.h>

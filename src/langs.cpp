@@ -1,5 +1,7 @@
 #include "langs.h"
 
+#include <cassert>
+
 namespace bip39 {
 
 std::array<std::string, 2048> english_words {
