@@ -77,7 +77,6 @@ target_include_directories(bip39_cpp PRIVATE
     ${CMAKE_SOURCE_DIR}/include
     ${utf8proc_SOURCE_DIR}
     ${OpenSSL_INCLUDE_DIR}
-    ${tinyformat_SOURCE_DIR}
 )
 
 # bip39 test
