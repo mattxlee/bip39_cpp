@@ -10,20 +10,19 @@
 
 int Run_GenNewMnemonic(int num_sentences, std::string_view lang)
 {
-    // Generate a new mnemonic sentences
     if (!bip39::Mnemonic::IsValidNumMnemonicSentences(num_sentences)) {
         throw std::runtime_error("invalid number of mnemonic sentences");
     }
-
+    // generate entropy
     int bits_ent = bip39::Mnemonic::GetEntBitsByNumMnemonicSentences(num_sentences);
     int num_bytes = bits_ent / 8;
     bip39::RandomBytes rnd(num_bytes);
     auto ent = rnd.Random();
-
+    // create mnemonic
     bip39::Mnemonic mnemonic(ent, std::string(lang));
     auto word_list = mnemonic.GetWordList();
     std::string mnemonic_sentences = bip39::GenerateWords(word_list, bip39::GetDelimiterByLang(lang));
-    std::cout << mnemonic_sentences << std::endl;
+    std::cout << "mnemonic (" << lang << "): " << mnemonic_sentences << std::endl;
     return 0;
 }
 
