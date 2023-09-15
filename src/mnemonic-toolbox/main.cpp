@@ -3,6 +3,7 @@
 
 #include <cxxopts.hpp>
 
+#include "langs.h"
 #include "random.h"
 #include "toolbox.h"
 #include "mnemonic.h"
@@ -28,11 +29,17 @@ int Run_GenNewMnemonic(int num_sentences, std::string_view lang)
 
 int main(int argc, char *argv[])
 {
+    std::stringstream ss_lang;
+    auto lang_list = bip39::utils::GetLangList();
+    ss_lang << *std::cbegin(lang_list);
+    for (auto i = std::cbegin(lang_list) + 1; i != std::cend(lang_list); ++i) {
+        ss_lang << ", " << *i;
+    }
     cxxopts::Options opts("Mnemonic tool", "A tool to generate mnemonic passphrase");
     opts.add_options()
         ("h,help", "Show help")
         ("n,num", "The number of the new mnemonic sentences", cxxopts::value<int>()->default_value("24"))
-        ("l,lang", "The language of the new mnemonic", cxxopts::value<std::string>()->default_value("english"))
+        ("l,lang", std::string("The language name of the new mnemonic, available languages: ") + ss_lang.str(), cxxopts::value<std::string>()->default_value("english"))
         ;
     auto result = opts.parse(argc, argv);
     if (result.count("help") > 0) {
