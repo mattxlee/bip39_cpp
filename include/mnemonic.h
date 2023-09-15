@@ -18,8 +18,6 @@ public:
 
     static int GetEntBitsByNumMnemonicSentences(int n);
 
-    static std::vector<std::string> GetLangList();
-
     Mnemonic(std::vector<uint8_t> entropy, std::string lang);
 
     Mnemonic(WordList const& word_list, std::string lang);

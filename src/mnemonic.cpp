@@ -27,15 +27,6 @@ int Mnemonic::GetEntBitsByNumMnemonicSentences(int n)
     return n * 32 / 3;
 }
 
-std::vector<std::string> Mnemonic::GetLangList()
-{
-    std::vector<std::string> res(sizeof(LANGUAGES));
-    for (int i = 0; i < sizeof(LANGUAGES); ++i) {
-        res.push_back(LANGUAGES[i]);
-    }
-    return res;
-}
-
 Mnemonic::Mnemonic(std::vector<uint8_t> entropy, std::string lang)
     : entropy_(std::move(entropy))
     , lang_(std::move(lang))
