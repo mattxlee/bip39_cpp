@@ -37,7 +37,7 @@ int main(int argc, char *argv[])
     cxxopts::Options opts("Mnemonic tool", "A tool to generate mnemonic passphrase");
     opts.add_options()
         ("h,help", "Show help")
-        ("n,num", "The number of the new mnemonic sentences", cxxopts::value<int>()->default_value("24"))
+        ("n,num", "The number of the new mnemonic sentences, valid numbers: (12, 15, 18, 21, 24)", cxxopts::value<int>()->default_value("24"))
         ("l,lang", std::string("The language name of the new mnemonic, available languages: ") + ss_lang.str(), cxxopts::value<std::string>()->default_value("english"))
         ;
     auto result = opts.parse(argc, argv);
