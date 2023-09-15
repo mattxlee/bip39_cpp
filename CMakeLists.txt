@@ -72,6 +72,7 @@ add_library(bip39_cpp ${BIP39_CPP_SRC})
 if (BUILD_OPENSSL)
     add_dependencies(bip39_cpp openssl)
 endif()
+target_link_libraries(bip39_cpp PRIVATE utf8proc ${OpenSSL_CRYPTO_LIB} ${OpenSSL_SSL_LIB})
 target_include_directories(bip39_cpp PRIVATE
     ${CMAKE_SOURCE_DIR}/include
     ${utf8proc_SOURCE_DIR}
@@ -90,7 +91,7 @@ if (BUILD_TEST)
         ${CMAKE_SOURCE_DIR}/include
         ${googletest_SOURCE_DIR}/googletest/include
     )
-    target_link_libraries(bip39_test PRIVATE bip39_cpp gtest gtest_main utf8proc ${OpenSSL_CRYPTO_LIB} ${OpenSSL_SSL_LIB})
+    target_link_libraries(bip39_test PRIVATE bip39_cpp gtest gtest_main)
 
     enable_testing()
     add_test(NAME BIP39Test COMMAND ${CMAKE_BINARY_DIR}/bip39_test)
@@ -101,5 +102,5 @@ if (BUILD_MNTOOL)
     set(MNEMONICTOOL_SRC ./src/mnemonic-toolbox/main.cpp)
     add_executable(mntool ${MNEMONICTOOL_SRC})
     target_include_directories(mntool PRIVATE ${CMAKE_SOURCE_DIR}/include ${cxxopts_SOURCE_DIR}/include)
-    target_link_libraries(mntool PRIVATE bip39_cpp utf8proc ${OpenSSL_CRYPTO_LIB} ${OpenSSL_SSL_LIB})
+    target_link_libraries(mntool PRIVATE bip39_cpp)
 endif()
