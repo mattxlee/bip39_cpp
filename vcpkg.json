@@ -1,0 +1,8 @@
+{
+    "dependencies": [
+        "cxxopts",
+        "openssl",
+        "utf8proc",
+        "gtest"
+    ]
+}
