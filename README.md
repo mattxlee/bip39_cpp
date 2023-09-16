@@ -10,15 +10,22 @@ This BIP describes the implementation of a mnemonic code or mnemonic sentence --
 
 ## Dependencies
 
-The build script is written in CMake, it is required before compiling bip39_cpp. The following libraries might be downloaded during the compiling procedure.
+### Tools need to be installed
 
-* utf8proc
+* CMake - You need to install CMake 3.5 or higher version in order to generate the compile script.
 
-* OpenSSL
+* unzip - Install unzip allow vcpkg download and extract files
 
-* Google test (optional)
+* pkg-config - This tool is also required by Vcpkg.
 
-* cxxopts (optional)
+### Download this repo and initialize
+
+Vcpkg is added as a submodule to manage required libraries, you need to initialize the submodules after the repo is cloned. You also need to initialize vcpkg from the dir. Following the instructions below to do the initialization.
+
+```bash
+git clone https://github.com/mattxlee/bip39_cpp && cd bip39_cpp && git submodule update --init # initialize git repo
+cd vcpkg && ./bootstrap-vcpkg.sh # initialize vcpkg
+```
 
 ## Components included
 
@@ -30,19 +37,21 @@ The build script is written in CMake, it is required before compiling bip39_cpp.
 
 ## Compiling instructions
 
+Before you do this step, the vcpkg should be initialized successfully and all the required tools are installed as well.
+
 1. Clone this repo: `git clone https://github.com/mattxlee/bip39_cpp`
 
 2. Create build dir inside the project root: `mkdir build && cd build`
 
 3. Prepare Makefile in easy way: `cmake ..`
 
-You need to ensure OpenSSL is installed on your system, or you can add arg: `-DBUILD_OPENSSL=1` to download OpenSSL during the make procedure. In default, it will not build the binary of test cases, you can add arg: `-DBUILD_TEST=1` to build it. You also can build the mnemonic generating tool by adding `-DBUILD_MNTOOL=1`.
+The script will will not build the binary of test cases in default, you can add arg: `-DBUILD_TEST=1` to prpeare the build script. After the compiling procedure, the test program should be ready from this path `build/bip39_test`. Run the program directly or run `make test` you should get the test result.
 
-4. Build: `make`
+4. Run this command: `make` to start the compiling procedure, and the required binaries should be ready after the compiling procedure is finished without any error.
 
 ## How to use the mnemonic generating tool
 
-Combine the arg `-DBUILD_MNTOOL=1` to generate the binary file of mnemonic generating tool.
+Combine the arg `-DBUILD_MNTOOL=1` to prepare the build script before starting the compiling procedure. The binary file of mnemonic generating tool should be ready from the path `build/mntool`.
 
 * Simply run commmand: `build/mntool` to generate a new mnemonic 24 sentences in english.
 
