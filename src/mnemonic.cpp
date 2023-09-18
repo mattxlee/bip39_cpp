@@ -88,7 +88,7 @@ std::vector<uint8_t> const& Mnemonic::GetEntropyData() const
     return entropy_;
 }
 
-std::vector<uint8_t> Mnemonic::CreateSeed(std::string_view passphrase)
+std::vector<uint8_t> Mnemonic::CreateSeed(std::string_view passphrase) const
 {
     std::string salt_src = std::string(u8"mnemonic") + std::string(passphrase);
     auto const* salt = utf8proc_NFKD(reinterpret_cast<uint8_t const*>(salt_src.c_str()));

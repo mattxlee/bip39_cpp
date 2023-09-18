@@ -26,7 +26,7 @@ public:
 
     std::vector<uint8_t> const& GetEntropyData() const;
 
-    std::vector<uint8_t> CreateSeed(std::string_view passphrase);
+    std::vector<uint8_t> CreateSeed(std::string_view passphrase) const;
 
 private:
     std::vector<uint8_t> entropy_;
