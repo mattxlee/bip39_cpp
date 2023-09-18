@@ -88,15 +88,21 @@ std::vector<uint8_t> const& Mnemonic::GetEntropyData() const
     return entropy_;
 }
 
+std::string NormalizeString(std::string_view src)
+{
+    uint8_t* sz = utf8proc_NFKD(reinterpret_cast<uint8_t const*>(src.data()));
+    std::string res(reinterpret_cast<char const*>(sz));
+    free(sz);
+    return res;
+}
+
 std::vector<uint8_t> Mnemonic::CreateSeed(std::string_view passphrase) const
 {
-    std::string salt_src = std::string(u8"mnemonic") + std::string(passphrase);
-    auto const* salt = utf8proc_NFKD(reinterpret_cast<uint8_t const*>(salt_src.c_str()));
+    std::string salt = NormalizeString(std::string(u8"mnemonic") + std::string(passphrase));
     int const out_len{512 / 8};
     std::vector<uint8_t> out(out_len);
-    std::string words_src = GenerateWords(word_list_, GetDelimiterByLang(lang_));
-    auto const* words = utf8proc_NFKD(reinterpret_cast<uint8_t const*>(words_src.c_str()));
-    int res = PKCS5_PBKDF2_HMAC(reinterpret_cast<char const*>(words), strlen(reinterpret_cast<char const*>(words)), salt, strlen(reinterpret_cast<char const*>(salt)), 2048, EVP_sha512(), out_len, out.data());
+    std::string words = NormalizeString(GenerateWords(word_list_, GetDelimiterByLang(lang_)));
+    int res = PKCS5_PBKDF2_HMAC(words.c_str(), words.size(), reinterpret_cast<uint8_t const*>(salt.c_str()), salt.size(), 2048, EVP_sha512(), out_len, out.data());
     if (1 != res) {
         throw std::runtime_error("failed to run algorithm: PBKDF2");
     }
