@@ -46,7 +46,7 @@ if (BUILD_TEST)
     target_link_libraries(bip39_test PRIVATE bip39_cpp GTest::gtest GTest::gtest_main)
 
     enable_testing()
-    add_test(NAME BIP39Test COMMAND ${CMAKE_BINARY_DIR}/bip39_test)
+    add_test(NAME BIP39Test COMMAND ${CMAKE_CURRENT_BINARY_DIR}/bip39_test)
 endif()
 
 # bip39 tool-box
@@ -54,6 +54,6 @@ if (BUILD_MNTOOL)
     find_package(cxxopts CONFIG REQUIRED)
     set(MNEMONICTOOL_SRC ./src/mnemonic-toolbox/main.cpp)
     add_executable(mntool ${MNEMONICTOOL_SRC})
-    target_include_directories(mntool PRIVATE ${CMAKE_SOURCE_DIR}/include)
+    target_include_directories(mntool PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
     target_link_libraries(mntool PRIVATE bip39_cpp cxxopts::cxxopts)
 endif()
