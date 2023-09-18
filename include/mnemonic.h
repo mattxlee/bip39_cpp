@@ -20,7 +20,7 @@ public:
 
     Mnemonic(std::vector<uint8_t> entropy, std::string lang);
 
-    Mnemonic(WordList const& word_list, std::string lang);
+    Mnemonic(WordList word_list, std::string lang);
 
     WordList const& GetWordList() const;
 

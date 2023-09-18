@@ -1536,6 +1536,16 @@ inline void InitLangTests(LangTests& tests)
     }));
 }
 
+TEST(Mnemonic, CreateSeed)
+{
+    char const* SZ_WORDS = "return village first merit biology slim leaf assume link physical silk identify material peanut keen settle logic absorb better famous exit glove tower inhale";
+    char const* SZ_SEED = "d9af3797565473a67677d1807d7bbd708692a0a8daea648bf1029f09a9d9c1c4fa4b4dc7d0880c9983d477383a2b5695025e316bb418cb5e2238c7eeebea053d";
+    auto word_list = bip39::ParseWords(SZ_WORDS);
+    bip39::Mnemonic mnemonic(word_list, "english");
+    auto seed = mnemonic.CreateSeed("");
+    EXPECT_EQ(seed, bip39::ParseHex(SZ_SEED));
+}
+
 TEST(Mnemonic, EntropyToWords)
 {
     static char const* SZ_PASSPHRASE = u8"TREZOR";

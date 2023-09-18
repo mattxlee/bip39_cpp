@@ -54,10 +54,11 @@ Mnemonic::Mnemonic(std::vector<uint8_t> entropy, std::string lang)
     }
 }
 
-Mnemonic::Mnemonic(WordList const& word_list, std::string lang)
-    : lang_(std::move(lang))
+Mnemonic::Mnemonic(WordList word_list, std::string lang)
+    : word_list_(std::move(word_list))
+    , lang_(std::move(lang))
 {
-    if (word_list.size() % 3 != 0 || word_list.size() < 12 || word_list.size() > 24) {
+    if (word_list_.size() % 3 != 0 || word_list_.size() < 12 || word_list_.size() > 24) {
         throw std::runtime_error("invalid number of words to convert");
     }
     Bits bits;
@@ -65,14 +66,14 @@ Mnemonic::Mnemonic(WordList const& word_list, std::string lang)
     if (!utils::LangExists(lang_)) {
         throw std::runtime_error("invalid lang name");
     }
-    for (auto const& word : word_list) {
+    for (auto const& word : word_list_) {
         int index = utils::GetLangIndex(lang_, word);
         if (index == -1) {
             throw std::runtime_error("index of the word cannot be found");
         }
         bits.AddBits(11, index);
     }
-    int num_ent_bits = word_list.size() * 32 / 3;
+    int num_ent_bits = word_list_.size() * 32 / 3;
     int num_entropy_bytes = num_ent_bits / 8;
     entropy_.resize(num_entropy_bytes);
     std::copy(std::cbegin(bits.GetData()), std::cbegin(bits.GetData()) + num_entropy_bytes, std::begin(entropy_));
