@@ -26,7 +26,7 @@ set(BIP39_CPP_SRC
 add_library(bip39_cpp ${BIP39_CPP_SRC})
 target_link_libraries(bip39_cpp PRIVATE utf8proc OpenSSL::Crypto OpenSSL::SSL)
 target_include_directories(bip39_cpp PRIVATE
-    ${CMAKE_SOURCE_DIR}/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
     ${utf8proc_SOURCE_DIR}
     ${OpenSSL_INCLUDE_DIR}
 )
@@ -40,7 +40,7 @@ if (BUILD_TEST)
     add_executable(bip39_test ${TEST_SRCS})
     target_include_directories(
         bip39_test PRIVATE
-        ${CMAKE_SOURCE_DIR}/include
+        ${CMAKE_CURRENT_SOURCE_DIR}/include
         ${googletest_SOURCE_DIR}/googletest/include
     )
     target_link_libraries(bip39_test PRIVATE bip39_cpp GTest::gtest GTest::gtest_main)
