@@ -18,21 +18,18 @@ public:
 
     static int GetEntBitsByNumMnemonicSentences(int n);
 
-    Mnemonic(std::vector<uint8_t> entropy, std::string lang);
+    explicit Mnemonic(std::vector<uint8_t> entropy);
 
-    Mnemonic(WordList word_list, std::string lang);
+    Mnemonic(WordList const& word_list, std::string const& lang);
 
-    WordList const& GetWordList() const;
+    WordList GetWordList(std::string const& lang) const;
 
     std::vector<uint8_t> const& GetEntropyData() const;
 
-    std::vector<uint8_t> CreateSeed(std::string_view passphrase) const;
+    std::vector<uint8_t> CreateSeed(std::string_view passphrase, std::string_view lang = "english") const;
 
 private:
     std::vector<uint8_t> entropy_;
-    std::string lang_;
-    int num_bits_;
-    WordList word_list_;
 };
 
 } // namespace bip39

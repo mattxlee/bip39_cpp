@@ -19,8 +19,8 @@ int Run_GenNewMnemonic(int num_sentences, std::string_view lang)
     bip39::RandomBytes rnd(num_bytes);
     auto ent = rnd.Random();
     // create mnemonic
-    bip39::Mnemonic mnemonic(ent, std::string(lang));
-    auto word_list = mnemonic.GetWordList();
+    bip39::Mnemonic mnemonic(ent);
+    auto word_list = mnemonic.GetWordList(std::string(lang));
     std::string mnemonic_sentences = bip39::GenerateWords(word_list, bip39::GetDelimiterByLang(lang));
     std::cout << "mnemonic (" << lang << "): " << mnemonic_sentences << std::endl;
     return 0;

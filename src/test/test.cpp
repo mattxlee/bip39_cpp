@@ -1561,9 +1561,9 @@ TEST(Mnemonic, EntropyToWords)
             std::string seed_str = test.seed;
             std::vector<uint8_t> seed = bip39::ParseHex(seed_str);
             // test: from bytes to words
-            bip39::Mnemonic mnemonic(hash, lang);
-            EXPECT_EQ(mnemonic.GetWordList(), words);
-            auto created_seed = mnemonic.CreateSeed(SZ_PASSPHRASE);
+            bip39::Mnemonic mnemonic(hash);
+            EXPECT_EQ(mnemonic.GetWordList(lang), words);
+            auto created_seed = mnemonic.CreateSeed(SZ_PASSPHRASE, lang);
             EXPECT_EQ(created_seed, seed);
             if (created_seed != seed) {
                 printf("hash: `%s`\n", hash_str.c_str());
